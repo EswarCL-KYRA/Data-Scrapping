@@ -44,7 +44,7 @@ def download_image(url, index):
             try:
                 os.makedirs(path)
             except OSError:
-                print('')
+                print('',end=" ")
                 # print("Creation of the directory %s failed", file_name, " 'path may already exist '")
             # filename,headers=opener.retrieve(url,'./assets/'+file_name)
             # dl_image(url,'assets/',file_name)
@@ -52,13 +52,13 @@ def download_image(url, index):
                 with open(file_name, 'wb') as f:
                     im = requests.get(url)
                     f.write(im.content)
-                    print(index, url, 'success')
+                    print(index,' success ',end=" ")
                     return 1
 
     except:
         with open('failed_urls.csv', 'a', encoding='UTF8') as fail:
             writer = csv.writer(fail)
-            print(index, url, 'failed')
+            print(index, ' failed ',end=" ")
             # write the header
             writer.writerow([index, url])
         return 0
