@@ -6,9 +6,11 @@ import os
 import concurrent.futures
 import time
 import concurrent.futures
+
 failed = []
 fails = []
-failedfile= open('failed_urls.csv','a')
+failedfile = open('failed_urls.csv', 'a')
+
 
 def download_image(url, index):
     try:
@@ -36,8 +38,8 @@ def download_image(url, index):
             # print(2,path)
             # print(path,query,'path')
             if 'file=' in url:
-                file_name=path+query
-                file_name=file_name.replace('/download.php','')
+                file_name = path + query
+                file_name = file_name.replace('/download.php', '')
                 path = path.replace('/download.php', '')
             try:
                 os.makedirs(path)
@@ -50,16 +52,16 @@ def download_image(url, index):
                 with open(file_name, 'wb') as f:
                     im = requests.get(url)
                     f.write(im.content)
-                    print(index, url,'success')
+                    print(index, url, 'success')
                     return 1
 
     except:
         with open('failed_urls.csv', 'a', encoding='UTF8') as fail:
             writer = csv.writer(fail)
-            print(index,url, 'failed')
+            print(index, url, 'failed')
             # write the header
-            writer.writerow([index,url])
-        return  0
+            writer.writerow([index, url])
+        return 0
 
 
 # for i in ['https://teradek.zendesk.com/attachments/token/woMkj1rQWJEHPkWRciJfZR0Bn/?name=inline1054491252.png',
@@ -72,9 +74,10 @@ import csv
 # to extract url
 # opening the CSV file
 extensions = ['end']
-urls = {'1':'1'}
+urls = {'1': '1'}
 with concurrent.futures.ThreadPoolExecutor() as executor:
-    with open('zendesk_comment_attachment_content_urls_and_plain_body_urls_oct_17.csv', encoding="utf8", errors='ignore') as file:
+    with open('zendesk_comment_attachment_content_urls_and_plain_body_urls_oct_17.csv', encoding="utf8",
+              errors='ignore') as file:
         # reading the CSV file
         csvFile = csv.reader(file)
 
@@ -85,9 +88,11 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
             # if '.' in link[l - 7:l]:
             #     d = link[l - 7:l]
             #     d = d.split('.')
-                #if d[1] in ["jpeg","JPEG","zip","ZIP","bin","BIN","png","PNG","jpg","JPG","deb","DEB","mp4","MP4","tar","TAR","pdf","PDF","WEBP", "webp", "GIF", "gif"] or line[0] in fails or 'file=' in link:
-                # download_image(link, line[0])
-            args=({"url":link, "index":line[0]})
-            download_image(link,line[0])
+            # if d[1] in ["jpeg","JPEG","zip","ZIP","bin","BIN","png","PNG","jpg","JPG","deb","DEB","mp4","MP4","tar","TAR","pdf","PDF","WEBP", "webp", "GIF", "gif"] or line[0] in fails or 'file=' in link:
+            # download_image(link, line[0])
+            args = ({"url": link, "index": line[0]})
+            if  line[0] !='index' and int(line[0]) % 2 != 0:
+                download_image(link, line[0])
+
 failedfile.close()
 print('failed_list', failed)
